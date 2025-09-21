@@ -14,20 +14,35 @@ class Diccionario(ABC):
 
     @abstractmethod
     def borre(self, elemento):
+        """
+        Elimina un elemento si existe.
+        """
         pass
 
     @abstractmethod
     def limpie(self):
+        """
+        Elimina todos los elementos.
+        """
         pass
 
     @abstractmethod
-    def miembro(self, elemento):
+    def miembro(self, elemento)-> bool:
+        """
+        Verifica si un elemento pertenece al diccionario.
+        """
         pass
 
     @abstractmethod
     def imprima(self):
+        """
+        Imprime todos los elementos.
+        """
         pass
 
     @abstractmethod
     def __str__(self) -> str:
+        """
+        Covierte el diccionario a cadena de caracteres.
+        """
         pass
