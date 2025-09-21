@@ -16,7 +16,12 @@ class ListaOrdenadaDinámica(Diccionario):
     def __getitem__(self, indice):
         pass
 
+    """
+    Funcion el diccionario 
+    """
+
     def inserte(self, elemento):
+  
         referencia: Nodo = self.__cabeza
         nodo = Nodo(elemento)
         if referencia.siguiente is None:
@@ -28,6 +33,7 @@ class ListaOrdenadaDinámica(Diccionario):
             referencia.siguiente = nodo
 
     def borre(self, elemento):
+
         pass
 
     def limpie(self):
