@@ -42,13 +42,54 @@ class ListaOrdenadaEstática(Diccionario):
             return self.__último + 1
     
     def __getitem__(self, índice):
-        pass
+        if not (0 <= índice <= self.__último):
+            raise IndexError("Índice de arreglo fuera de los limites")
+        return self.__arreglo[índice]
 
     def inserte(self, elemento):
-        pass
+        if self.__último is None:
+            if len(self.__arreglo) == 0:
+                raise ValueError("El arreglo está lleno")
+            self.__arreglo[0] = elemento
+            self.__último = 0
+            return
+        
+        if self.__último +1 >= len(self.__arreglo):
+            raise OverflowError("La lista está llena")
+        
+        pos = 0
+        while pos <= self.__último and self.__arreglo[pos] < elemento:
+            pos += 1
+        
+        for i in range(self.__último, pos -1, -1):
+            self.__arreglo[i + 1] = self.__arreglo[i]
+        
+        self.__arreglo[pos] = elemento
+        self.__último +=1
 
     def borre(self, elemento):
-        pass
+        if self.__último is None:
+            return False
+        
+        pos = -1
+        for i in range(self.__último + 1):
+            if self.__arreglo[i] == elemento:
+                pos = i
+                break
+
+        if pos == -1:
+            return False
+        
+        for i in range(pos, self.__ultimo):
+            self.__arreglo[i] = self.__arreglo[i + 1]
+        
+        self.__arreglo[self.__último] = 0
+        self.__último -= 1
+
+        if self.__último == -1:
+            self.__último = None
+
+        return True
 
     def limpie(self):
         pass
