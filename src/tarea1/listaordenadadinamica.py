@@ -79,10 +79,30 @@ class ListaOrdenadaDinámica(Diccionario):
         return False
     
     def imprima(self):
-        print(self)
-
+        """
+        Imprime todos los elementos de la lista.
+        """
+        actual = self.__cabeza.siguiente
+        salida = []
+        while actual is not None:
+            salida.append(actual.elemento)
+            actual = actual.siguiente
+        print(" -> ".join(salida) if salida else "Diccionario vacío")
+        
     def __str__(self) -> str:
-        pass
+        """
+        Representación en string de la lista.
+        """
+        elementos = []
+        actual = self.__cabeza.siguiente
+        while actual is not None:
+            elementos.append(actual.elemento)
+            actual = actual.siguiente
+        return " -> ".join(elementos)
+        
     
     def __del__(self):
-        pass
+        """
+        Destructor: limpia la lista cuando se elimina el objeto.
+        """
+        self.limpie()
