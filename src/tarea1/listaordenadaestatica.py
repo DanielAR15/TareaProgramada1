@@ -32,7 +32,7 @@ class Array:
 
 class ListaOrdenadaEstática(Diccionario):
     def __init__(self, tamaño):
-        self.__arreglo: Array = Array(valor_inicial=0, tamaño=tamaño)
+        self.__arreglo: Array = Array(valor_inicial=None, tamaño=tamaño)
         self.__último: int | None = None
 
     def __len__(self):
@@ -80,28 +80,46 @@ class ListaOrdenadaEstática(Diccionario):
         if pos == -1:
             return False
         
-        for i in range(pos, self.__ultimo):
+        for i in range(pos, self.__último):
             self.__arreglo[i] = self.__arreglo[i + 1]
         
-        self.__arreglo[self.__último] = 0
+        self.__arreglo[self.__último] = None
         self.__último -= 1
 
         if self.__último == -1:
-            self.__último = None
+            self.__último = None 
 
         return True
 
     def limpie(self):
-        pass
+        if self.__último is not None:
+            for i in range(self.__último + 1):
+                self.__arreglo[i] = None
+            self.__último = None
 
     def miembro(self, elemento):
-        pass
+        if self.__último is None:
+            return False
+                
+        inicio, fin = 0, self.__último
+        while inicio <= fin:
+            medio = (inicio + fin) // 2
+            if self.__arreglo[medio] == elemento:
+                return True
+            elif self.__arreglo[medio] < elemento:
+                inicio = medio + 1
+            else:
+                fin = medio - 1
+        return False
 
     def imprima(self):
         print(self)
 
     def __str__(self) -> str:
-        return str(self.__arreglo)
+        if self.__último is None:
+            return "[]"
+        return str(self.__arreglo._Array__lista[:self.__último + 1])
     
     def __del__(self):
-        pass
+        self.limpie()
+        del self.__arreglo
