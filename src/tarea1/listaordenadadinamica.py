@@ -33,17 +33,16 @@ class ListaOrdenadaDinámica(Diccionario):
         """
         Inserta el elemento en orden ascendente
         """
-
+        
         referencia: Nodo = self.__cabeza
+        
+        while referencia.siguiente is not None and referencia.siguiente.elemento < elemento:
+            referencia = referencia.siguiente
+
         nodo = Nodo(elemento)
-        if referencia.siguiente is None:
-            referencia.siguiente = nodo
-        else:
-            while referencia.siguiente.siguiente is not None and elemento > referencia.siguiente.elemento:
-                referencia = referencia.siguiente
-            nodo.siguiente = referencia.siguiente
-            referencia.siguiente = nodo
-            self.__tamaño += 1
+        nodo.siguiente = referencia.siguiente
+        referencia.siguiente = nodo
+        self.__tamaño += 1
 
     def borre(self, elemento):
 
