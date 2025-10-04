@@ -1,5 +1,6 @@
 from tarea1.listaordenadadinamica import ListaOrdenadaDinámica
 from tarea1.listaordenadaestatica import ListaOrdenadaEstática
+from tarea1.tablahashabierta import TablaHashAbierta
 
 
 def probar_diccionario(diccionario, nombre="Diccionario"):
@@ -58,5 +59,6 @@ if __name__ == "__main__":
     probar_diccionario(ListaOrdenadaEstática(100), "ListaOrdenadaEstática")
 
     #Prueba con la tabla hash 
+    probar_diccionario(TablaHashAbierta(10), "TablaHashAbierta")
 
     print("\nSe terminó la implementación y depuración :)")
