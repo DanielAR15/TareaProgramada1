@@ -56,6 +56,8 @@ class ListaOrdenadaDinámica(Diccionario):
         if referencia.siguiente is not None:
             referencia.siguiente = referencia.siguiente.siguiente
             self.__tamaño -= 1
+            return True
+        return False
 
     def limpie(self):
 
