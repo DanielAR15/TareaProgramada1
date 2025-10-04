@@ -35,6 +35,17 @@ pip install rich
 
 python -m tarea1
 
+## ejecucion de las pruebas
+
+Primero navegas al directorio src y colocas :
+>$env:PYTHONPATH = "src"
+
+ Si quieres ejecutar las pruebas generales de las tres estructuras coloca este comando:
+>python test/main_test.py 
+
+Si quieres probar la aleatoriedad y redistribución de la has coloca:
+
+>python test_aleatoriedadhash.py
 ---
 ## Menu Principal
 
