@@ -13,7 +13,7 @@ from rich.prompt import Prompt
 from tarea1.diccionario import Diccionario
 from tarea1.listaordenadadinamica import ListaOrdenadaDinámica
 from tarea1.listaordenadaestatica import ListaOrdenadaEstática
-
+from tarea1.tablahash import TablaHash
 console = Console()
 
 # =====================
@@ -223,8 +223,7 @@ def menu_clase() -> Diccionario:
             case "2":
                 return ListaOrdenadaEstática(100)
             case "3":
-                from tarea1.tablahashabierta import TablaHashAbierta
-                return TablaHashAbierta()
+                return TablaHash()
             case "4":
                 from tarea1.abbpunteros import ABBPunteros
                 return ABBPunteros()
