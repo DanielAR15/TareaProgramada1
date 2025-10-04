@@ -12,9 +12,13 @@ class TablaHashAbierta(Diccionario):
 
     def _hash(self, elemento: str) -> int:
         """
-        Calcula el índice hash de un elemento.
+        Calcula el índice hash de un elemento haciendo uso de DJB2.
         """
-        return sum(ord(c) for c in elemento) % self.capacidad
+        h = 5381
+        for c in elemento:
+            h = ((h << 5) + h) + ord(c)  # h * 33 + ord(c)
+        return h % self.capacidad
+
 
     def _factor_carga(self) -> float:
         """
