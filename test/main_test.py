@@ -1,6 +1,8 @@
 from tarea1.listaordenadadinamica import ListaOrdenadaDinámica
 from tarea1.listaordenadaestatica import ListaOrdenadaEstática
 from tarea1.tablahashabierta import TablaHashAbierta
+from tarea1.triepunteros import TriePunteros
+
 
 
 def probar_diccionario(diccionario, nombre="Diccionario"):
@@ -60,5 +62,11 @@ if __name__ == "__main__":
 
     #Prueba con la tabla hash 
     probar_diccionario(TablaHashAbierta(10), "TablaHashAbierta")
+
+    #Prueba con el trie de punteros
+    probar_diccionario(TriePunteros(), "Trie punteros")
+
+    #Prueba con el trie de arreglos
+    
 
     print("\nSe terminó la implementación y depuración :)")
