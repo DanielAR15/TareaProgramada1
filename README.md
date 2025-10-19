@@ -40,6 +40,7 @@ python -m tarea1
 Primero navegas al directorio src y colocas :
 >$env:PYTHONPATH = "src"
 
+Luego te diriges a la carpeta base, con el comando --> cd ..
  Si quieres ejecutar las pruebas generales de las tres estructuras coloca este comando:
 >python test/main_test.py 
 
