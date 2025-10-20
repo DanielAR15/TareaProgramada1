@@ -2,7 +2,7 @@ from tarea1.listaordenadadinamica import ListaOrdenadaDinámica
 from tarea1.listaordenadaestatica import ListaOrdenadaEstática
 from tarea1.tablahashabierta import TablaHashAbierta
 from tarea1.triepunteros import TriePunteros
-
+from tarea1.triearreglos import TrieArreglos
 
 
 def probar_diccionario(diccionario, nombre="Diccionario"):
@@ -67,6 +67,6 @@ if __name__ == "__main__":
     probar_diccionario(TriePunteros(), "Trie punteros")
 
     #Prueba con el trie de arreglos
-    
+    probar_diccionario(TrieArreglos(), "Trie arreglos")
 
     print("\nSe terminó la implementación y depuración :)")
