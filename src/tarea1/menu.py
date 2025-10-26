@@ -225,8 +225,8 @@ def menu_clase() -> Diccionario:
             case "3":
                 return TablaHash()
             case "4":
-                from tarea1.abbpunteros import ABBPunteros
-                return ABBPunteros()
+                from tarea1.abbpunteros import AbbPunteros
+                return AbbPunteros()
             case "5":
                 from tarea1.abbvectorheap import ABBVectorHeap
                 return ABBVectorHeap()
