@@ -2,17 +2,17 @@ from tarea1.diccionario import Diccionario
 
 class NodoTrieArreglo:
     """
-    Nodo para el Trie usando arreglos.
+    Nodo del Trie
     """
     def __init__(self):
-        self.simbolos = []
-        self.hijos = []
+        self.simbolos = [""] * 100
+        self.hijos = [None] * 100
         self.fin_de_palabra = False
 
 
 class TrieArreglos(Diccionario):
     """
-    Trie implementado con arreglos
+    Trie con arreglos estáticos , puede contener mayúsculas, minúsculas, tildes, eñes, etc.
     """
     def __init__(self):
         self.raiz = NodoTrieArreglo()
@@ -20,25 +20,37 @@ class TrieArreglos(Diccionario):
 
     def _buscar_indice(self, nodo, caracter):
         """
-        Busca el índice de un carácter en la lista de símbolos del nodo.
+        Busca el índice del carácter en el array del nodo.
         """
         for i in range(len(nodo.simbolos)):
             if nodo.simbolos[i] == caracter:
                 return i
         return -1
 
+    def _buscar_posicion_libre(self, nodo):
+        """
+        Retorna la primera posición libre en el arreglo de símbolos del nodo.
+        """
+        for i in range(len(nodo.simbolos)):
+            if nodo.simbolos[i] == "":
+                return i
+        return -1
+
     def inserte(self, hilera):
         """
-        Inserta una hilera (cadena) en el Trie.
+        Inserta una hilera en el Trie.
         """
         nodo_actual = self.raiz
 
         for caracter in hilera:
             indice = self._buscar_indice(nodo_actual, caracter)
             if indice == -1:
+                pos_libre = self._buscar_posicion_libre(nodo_actual)
+                if pos_libre == -1:
+                    raise MemoryError("Nodo sin espacio disponible")
                 nuevo_nodo = NodoTrieArreglo()
-                nodo_actual.simbolos.append(caracter)
-                nodo_actual.hijos.append(nuevo_nodo)
+                nodo_actual.simbolos[pos_libre] = caracter
+                nodo_actual.hijos[pos_libre] = nuevo_nodo
                 nodo_actual = nuevo_nodo
             else:
                 nodo_actual = nodo_actual.hijos[indice]
@@ -49,16 +61,14 @@ class TrieArreglos(Diccionario):
 
     def miembro(self, hilera):
         """
-        Verifica si la hilera ingresada como parámetro existe en el Trie.
+        Verifica si una hilera existe en el Trie.
         """
         nodo_actual = self.raiz
-
         for caracter in hilera:
             indice = self._buscar_indice(nodo_actual, caracter)
             if indice == -1:
                 return False
             nodo_actual = nodo_actual.hijos[indice]
-
         return nodo_actual.fin_de_palabra
 
     def borre(self, hilera):
@@ -80,33 +90,39 @@ class TrieArreglos(Diccionario):
 
         nodo_actual.fin_de_palabra = False
         self.contador -= 1
-        self._limpiar_nodos(pila, nodo_actual)
+        self._limpiar_nodos(pila)
         return True
 
-    def _limpiar_nodos(self, pila, nodo_actual):
+    def _limpiar_nodos(self, pila):
         """
-        Limpia los nodos que quedan sin uso después de borrar una palabra.
+        Limpia nodos vacíos después de borrar una palabra.
         """
-        if nodo_actual.fin_de_palabra or nodo_actual.hijos:
-            return
-
         while pila:
             nodo_padre, indice = pila.pop()
-            del nodo_padre.simbolos[indice]
-            del nodo_padre.hijos[indice]
-            if nodo_padre.fin_de_palabra or nodo_padre.hijos:
+            hijo = nodo_padre.hijos[indice]
+
+            if hijo is not None and (hijo.fin_de_palabra or any(hijo.hijos)):
+                break
+
+            nodo_padre.simbolos[indice] = ""
+            nodo_padre.hijos[indice] = None
+
+            if nodo_padre.fin_de_palabra or any(nodo_padre.hijos):
                 break
 
     def _imprimir_recursivo(self, nodo, prefijo):
         """
-        Función para imprimir todas las hileras almacenadas.
+        Imprime todas las hileras almacenadas.
         """
+        if nodo is None:
+            return
         if nodo.fin_de_palabra:
             print(f"  {prefijo}")
 
-        pares = sorted(zip(nodo.simbolos, nodo.hijos), key=lambda x: x[0])
-        for caracter, hijo in pares:
-            self._imprimir_recursivo(hijo, prefijo + caracter)
+        for i in range(len(nodo.simbolos)):
+            simbolo = nodo.simbolos[i]
+            if simbolo != "" and nodo.hijos[i] is not None:
+                self._imprimir_recursivo(nodo.hijos[i], prefijo + simbolo)
 
     def imprima(self):
         """
@@ -123,11 +139,15 @@ class TrieArreglos(Diccionario):
         """
         Junta todos los elementos del Trie en una lista.
         """
+        if nodo is None:
+            return
         if nodo.fin_de_palabra:
             elementos.append(prefijo)
 
         for i in range(len(nodo.simbolos)):
-            self.juntar_elementos(nodo.hijos[i], prefijo + nodo.simbolos[i], elementos)
+            simbolo = nodo.simbolos[i]
+            if simbolo != "" and nodo.hijos[i] is not None:
+                self.juntar_elementos(nodo.hijos[i], prefijo + simbolo, elementos)
 
     def limpie(self):
         """
@@ -138,7 +158,7 @@ class TrieArreglos(Diccionario):
 
     def __str__(self):
         """
-        Devuelve una representación de texto del Trie.
+        Devuelve una representación textual del Trie.
         """
         elementos = []
         self.juntar_elementos(self.raiz, "", elementos)
@@ -146,6 +166,6 @@ class TrieArreglos(Diccionario):
 
     def __len__(self):
         """
-        Devuelve el número de elementos en el Trie.
+        Devuelve la cantidad de elementos en el Trie.
         """
         return self.contador
