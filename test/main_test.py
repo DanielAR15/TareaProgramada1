@@ -3,7 +3,8 @@ from tarea1.listaordenadaestatica import ListaOrdenadaEstática
 from tarea1.tablahashabierta import TablaHashAbierta
 from tarea1.triepunteros import TriePunteros
 from tarea1.triearreglos import TrieArreglos
-
+from tarea1.abbpunteros import AbbPunteros
+from tarea1.abbvectorheap import ABBVectorHeap
 
 def probar_diccionario(diccionario, nombre="Diccionario"):
     print(f"\nProbando {nombre}...")
@@ -14,12 +15,12 @@ def probar_diccionario(diccionario, nombre="Diccionario"):
     assert diccionario.miembro("azul") is False
 
     # Insertar elementos a la estructura de datos
-    diccionario.inserte("programa de televisión")
+    diccionario.inserte("Programa de televisión")
     diccionario.inserte("hola")
     diccionario.inserte("bola")
     diccionario.inserte("mariposa")
 
-    assert diccionario.miembro("programa de televisión") is True
+    assert diccionario.miembro("Programa de televisión") is True
     assert diccionario.miembro("hola") is True
     assert diccionario.miembro("bola") is True
     assert diccionario.miembro("zzz") is False
@@ -68,5 +69,11 @@ if __name__ == "__main__":
 
     #Prueba con el trie de arreglos
     probar_diccionario(TrieArreglos(), "Trie arreglos")
+
+    #Prueba con el abb heap
+    probar_diccionario(ABBVectorHeap(), "arbol de vectores")
+
+    #Prueba con el abb punteros
+    probar_diccionario(AbbPunteros(), "arbol de punteros")
 
     print("\nSe terminó la implementación y depuración :)")
