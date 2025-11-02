@@ -10,7 +10,7 @@ import csv
 import tracemalloc
 from pathlib import Path
 
-SIZES = [100, 1000]   
+SIZES = [100,1000,10000]   
 NUM_RUNS = 10
 OUTPUT_CSV = "resultados_rendimiento.csv"
 MEASURE_MEMORY = True
@@ -28,7 +28,7 @@ from tarea1.abbpunteros import AbbPunteros
 from tarea1.abbvectorheap import ABBVectorHeap
 
 comparaciones = [
-    ("ListaOrdenadaDinámica", lambda: ListaOrdenadaDinámica(), "ListaOrdenadaEstática", lambda: ListaOrdenadaEstática(2000)),
+    ("ListaOrdenadaDinámica", lambda: ListaOrdenadaDinámica(), "ListaOrdenadaEstática", lambda: ListaOrdenadaEstática(2000000)),
     ("AbbPunteros", lambda: AbbPunteros(), "ABBVectorHeap", lambda: ABBVectorHeap(6000)),
     ("TriePunteros", lambda: TriePunteros(), "TrieArreglos", lambda: TrieArreglos()),
     ("ListaOrdenadaDinámica", lambda: ListaOrdenadaDinámica(), "TablaHash", lambda: TablaHash()),
