@@ -47,6 +47,12 @@ Luego te diriges a la carpeta base, con el comando --> cd ..
 Si quieres probar la aleatoriedad y redistribución de la has coloca:
 
 >python test_aleatoriedadhash.py
+
+Si vas a ejecutar las pruebas de rendimiento, debes colocar:
+>python -m tarea1.pruebas_de_rendimiento
+
+Luego, para ejecutar el file que crea los gráficos, colocas:
+>python test/analisis_datos.py
 ---
 ## Menu Principal
 
