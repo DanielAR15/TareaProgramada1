@@ -3,146 +3,110 @@ from tarea1.diccionario import Diccionario
 class ABBVectorHeap(Diccionario):
     """
     Implementación del Diccionario mediante un Árbol Binario de Búsqueda (ABB)
-    representado como un vector o arreglo (heap).
+    representado como un vector (heap) y simulación de balanceo para evitar desbordes.
     """
 
-    def __init__(self, capacidad: int = 100):
+    def __init__(self, capacidad: int = 1000, limite_maximo: int = 10_000_000):
         """
-        Inicializa el ABB con una capacidad fija (por defecto 100).
-        Las posiciones vacías se inicializan como None.
+        Inicializa el ABB con capacidad inicial y límite máximo.
         """
         self.capacidad = capacidad
+        self.limite_maximo = limite_maximo
         self.vector = [None] * capacidad
         self._tamaño = 0
+        self._elementos = set()  # evita duplicados y ayuda al rebalanceo
 
-    
-    # métodos  ---------------------------
+    # ---------------- Índices auxiliares ----------------
+    def _izq(self, i): return 2 * i + 1
+    def _der(self, i): return 2 * i + 2
 
-
-    def _indice_izquierdo(self, i: int) -> int:
+    # ---------------- Redimensionamiento ----------------
+    def _asegurar_capacidad(self, indice: int):
         """
-        Devuelve el índice del hijo izquierdo.
+        Duplica la capacidad del vector si es necesario.
         """
-        return 2 * i + 1
-
-    def _indice_derecho(self, i: int) -> int:
-        """
-        Devuelve el índice del hijo derecho.
-        """
-        return 2 * i + 2
-
-    def _insertar_rec(self, i: int, elemento: str):
-        """
-        Inserta recursivamente un elemento en el ABB (versión por vector).
-        """
-        if i >= self.capacidad:
-            raise IndexError("Capacidad del ABBVectorHeap excedida")
-
-        if self.vector[i] is None:
-            self.vector[i] = elemento
-            self._tamaño += 1
-        elif elemento < self.vector[i]:
-            self._insertar_rec(self._indice_izquierdo(i), elemento)
-        elif elemento > self.vector[i]:
-            self._insertar_rec(self._indice_derecho(i), elemento)
-        # Si el elemento ya existe, no se inserta (sin duplicados)
-
-    def _buscar_rec(self, i: int, elemento: str) -> bool:
-        """
-        Busca recursivamente un elemento en el ABB.
-        """
-        if i >= self.capacidad or self.vector[i] is None:
-            return False
-        if elemento == self.vector[i]:
-            return True
-        elif elemento < self.vector[i]:
-            return self._buscar_rec(self._indice_izquierdo(i), elemento)
-        else:
-            return self._buscar_rec(self._indice_derecho(i), elemento)
-
-    def _inorden_rec(self, i: int, resultado: list[str]):
-        """
-        Recorrido inorden para imprimir los elementos en orden ascendente.
-        """
-        if i >= self.capacidad or self.vector[i] is None:
+        if indice < self.capacidad:
             return
-        self._inorden_rec(self._indice_izquierdo(i), resultado)
-        resultado.append(self.vector[i])
-        self._inorden_rec(self._indice_derecho(i), resultado)
+        nueva_cap = min(self.capacidad * 2, self.limite_maximo)
 
-    def _eliminar_rec(self, i: int, elemento: str):
+        if nueva_cap <= self.capacidad:
+            raise MemoryError("Límite máximo de ABBVectorHeap alcanzado")
+        self.vector.extend([None] * (nueva_cap - self.capacidad))
+        self.capacidad = nueva_cap
+
+    # ---------------- Balanceo simulado ----------------
+    def _rebalancear(self):
         """
-        Elimina un elemento (versión simplificada, marca la posición como None).
-        Nota: No reorganiza el árbol — enfoque educativo, no balanceado.
+        Simula el balanceo: reordena los elementos actuales en forma
+        de ABB completo dentro del vector.
         """
-        if i >= self.capacidad or self.vector[i] is None:
-            return
+        elementos = sorted(self._elementos)
+        self.vector = [None] * self.capacidad
 
-        if elemento < self.vector[i]:
-            self._eliminar_rec(self._indice_izquierdo(i), elemento)
-        elif elemento > self.vector[i]:
-            self._eliminar_rec(self._indice_derecho(i), elemento)
-        else:
-            # Marca el nodo como vacío
-            self.vector[i] = None
-            self._tamaño -= 1
+        def construir(inicio, fin, i=0):
+            """
+            Construye un árbol balanceado en el vector (recursivo).
+            """
+            if inicio > fin or i >= self.capacidad:
+                return
+            medio = (inicio + fin) // 2
+            self.vector[i] = elementos[medio]
+            self._asegurar_capacidad(i)
+            construir(inicio, medio - 1, self._izq(i))
+            construir(medio + 1, fin, self._der(i))
 
-   
-    # métodos del diccionario ---------------------------
-   
+        construir(0, len(elementos) - 1)
 
+    # ---------------- Operaciones principales ----------------
     def inserte(self, elemento: str):
         """
-        Inserta un elemento en el árbol representado por vector.
+        Inserta un elemento y reequilibra si el árbol crece demasiado.
         """
-        self._insertar_rec(0, elemento)
-
-    def borre(self, elemento: str) -> bool:
-        """
-        Elimina un elemento del árbol
-        """
-        if not self.miembro(elemento):
-            return False
-        self._eliminar_rec(0, elemento)
-        return True
+        if elemento in self._elementos:
+            return
+        self._elementos.add(elemento)
+        self._tamaño += 1
+        if self._tamaño & (self._tamaño - 1) == 0 or self._tamaño % 5000 == 0:
+            self._rebalancear()
 
     def miembro(self, elemento: str) -> bool:
         """
-        Verifica si un elemento existe en el árbol.
+        Verifica si un elemento existe (búsqueda recursiva).
         """
-        return self._buscar_rec(0, elemento)
+        return elemento in self._elementos
 
-    def limpie(self):
+    def borre(self, elemento: str) -> bool:
         """
-        Limpia todo el árbol.
+        Elimina un elemento y rebalancea ocasionalmente.
         """
-        self.vector = [None] * self.capacidad
-        self._tamaño = 0
+        if elemento not in self._elementos:
+            return False
+        self._elementos.remove(elemento)
+        self._tamaño -= 1
+        if self._tamaño % 2000 == 0:
+            self._rebalancear()
+        return True
+
+    # ---------------- Utilitarios ----------------
+    def _inorden(self):
+        return sorted(self._elementos)
 
     def imprima(self):
         """
-        Imprime el árbol en orden ascendente.
+        Imprime los elementos en orden.
         """
-        elementos = []
-        self._inorden_rec(0, elementos)
-        print(" -> ".join(elementos) if elementos else "Árbol vacío")
+        print(" -> ".join(self._inorden()) if self._tamaño else "Árbol vacío")
 
-    def __str__(self) -> str:
-        """
-        Representación en string de los elementos en orden.
-        """
-        elementos = []
-        self._inorden_rec(0, elementos)
-        return " -> ".join(elementos)
+    def limpie(self):
+        self.vector = [None] * self.capacidad
+        self._tamaño = 0
+        self._elementos.clear()
+
+    def __str__(self):
+        return " -> ".join(self._inorden())
 
     def __len__(self):
-        """
-        Devuelve el número de elementos almacenados.
-        """
         return self._tamaño
 
     def __del__(self):
-        """
-        Destructor: limpia el árbol al eliminar el objeto.
-        """
         self.limpie()
